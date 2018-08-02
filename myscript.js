@@ -38,9 +38,9 @@ function jigsawForms(){
 
 	let clueForm = `
 		<form>
-		Upload Picture: <form enctype="multipart/form-data" action="/upload/image" method="post">
-    						<input id="image-file" type="file" />
-						</form><br>
+		Upload Picture: <form action="/action_page.php">
+  		<input type="file" name="pic" accept="image/*">
+		</form>
 		Pieces Across: <input type="number" min="1" max="6" name="piecesAcross"><br>
 		Pieces Down: <input type="number" min="1" max="6" name="piecesDown"><br>
 		<input type="submit" value="update">
@@ -96,12 +96,13 @@ function multiForms(){
 
 function addMultiButton(add){
 	multiButtonID++;
-	let inputTitle
 
+	let inputTitle
 	add==="Answers" ? inputTitle="Correct Answer: " : inputTitle="Possible Choice: ";
-	$(".extra" + add).append(`<div class='multibutton`+multiButtonID+`'</br>
+
+	$(".extra" + add).append(`<div class='multibutton`+multiButtonID+`'>
 		`+inputTitle+`<input type="text" name="AnswerText">
-		<input type='button' value='Remove' onclick='removeMultiButton(`+multiButtonID+`)'></br>
+		<input type='button' value='Remove' onclick='removeMultiButton(`+multiButtonID+`)'><br>
 		</div>`);
 };
 
@@ -109,11 +110,11 @@ function removeMultiButton(ID){
 	$(".multibutton"+ID).remove();
 }
 
-function addColumn(ID){
+function addColumn(){
 	columnID++;
-	$("pickerColumns").append(`<div class="column`+columnID+`" </br>
+	$(".pickerColumns").append(`<div class="column`+columnID+`">
 		Picker Column: <input type="text" name="pickerColumn">
-		<input type="button" value="Remove" onclick="removeColumn(`+columnID+`)"></br>
+		<input type="button" value="Remove" onclick="removeColumn(`+columnID+`)"><br>
 		</div>`);
 }
 
@@ -124,6 +125,7 @@ function removeColumn(ID){
 $(document).ready(function(){
 
 let clueType = document.getElementById("clueType");
+stringForms();
 
 clueType.onchange = function(){
 	let selValue = clueType.value;

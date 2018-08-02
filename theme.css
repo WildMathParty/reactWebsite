@@ -1,3 +1,12 @@
-#p2 {
-	color: red;
+body {
+	background-image: url(http://peanutbutterjellytime.net/img/peanut-butter-jelly-time.gif);
+}
+
+.clueSelect {
+	text-align: center;
+}
+
+.formsDiv {
+	margin: 100px 0 0 0;
+	text-align: center;
 }
