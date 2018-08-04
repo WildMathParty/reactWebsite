@@ -1,7 +1,7 @@
-let multiButtonID = 0;
 let columnID = 0;
 let clueNum = 0;
 let multiNum = 0;
+let multiBtnNum = 0;
 
 //Question Answer string clue type
 function stringForms(clueID){
@@ -85,38 +85,39 @@ function multiForms(clueID){
 function multiTypeSwitch(){
 	switch(this.value){
 		case "multi":
-			$("."+clueID+" .extraAnswers").remove()
-			$("."+clueID+" .answerAdd").remove();
+			$("#"+this.id+" .extraAnswers").remove()
+			$("#"+this.id+" .answerAdd").remove();
 			break;
 		case "combi":
-			$("."+clueID+" .answerInputs").append('<div class="extraAnswers"></div>');
-			$("."+clueID+" .answerInputs").append(`<input class="answerAdd" type="button" value="Add Answer" onclick="addMultiButton('Answers', '`+clueID+`')">`);
+			$(".tester").remove()
+			$("#"+this.id+" .answerInputs").append('<div class="extraAnswers"></div>');
+			$("#"+this.id+" .answerInputs").append(`<input class="answerAdd" type="button" value="Add Answer" onclick="addMultiButton('Answers', '`+this.id+`')">`);
 			break;
 		default:
 			return;
 	}
 }
 
-function addMultiButton(add, clueID){
-	multiButtonID++;
+function addMultiButton(add, multiID){
+	multiBtnNum++;
 
 	let inputTitle
 	add==="Answers" ? inputTitle="Correct Answer: " : inputTitle="Possible Choice: ";
 
-	$("."+clueID+" .extra" + add).append(`<div class='multibutton`+multiButtonID+`'>
-		`+inputTitle+`<input type="text" name="AnswerText">
-		<input type='button' value='Remove' onclick='removeMultiButton(`+multiButtonID+`, "`+clueID+`")'><br>
+	$("#"+multiID+" .extra" + add).append(`<div class='multibutton`+multiBtnNum+`'>
+		`+inputTitle+`<input type="text">
+		<input type='button' value='Remove' onclick='removeMultiButton(`+multiBtnNum+`)'><br>
 		</div>`);
 };
 
-function removeMultiButton(ID, clueID){
-	$("."+clueID+" .multibutton"+ID).remove();
+function removeMultiButton(multiBtnID){
+	$(".multibutton"+multiBtnID).remove();
 }
 
 function addMultiClue(clueID){
 	multiNum++;
 	let clueForm = `<div id="multi`+multiNum+`">
-		Question Type: <select class="multiType"><br>
+		Question Type: <select class="multiType" id="multi`+multiNum+`"><br>
 			<option value="multi">Multiple Choice</option><br>
 			<option value="combi">Combinatorial</option><br>
 		</select><br>
@@ -129,13 +130,13 @@ function addMultiClue(clueID){
 		<div class="choiceInputs"><br>		
 			Possible Choice: <input type="text" class="ChoiceText"><br>
 		<div class="extraChoices"></div>
-		<input type="button" value="Add Choice" onclick="addMultiButton('Choices', '`+clueID+`')">
+		<input type="button" value="Add Choice" onclick="addMultiButton('Choices', 'multi`+multiNum+`')">
 		</div><br>
 
 		</div>`;
 
 	$("."+clueID+" .multiAdd").before(clueForm);
-	$("#"+multiNum+" .multiType").change(multiTypeSwitch);
+	$("#multi"+multiNum+" .multiType").change(multiTypeSwitch);
 }
 
 //Submit clue type forms
