@@ -1,5 +1,5 @@
 body {
-	background-image: url(http://peanutbutterjellytime.net/img/peanut-butter-jelly-time.gif);
+	/*background-image: url(http://peanutbutterjellytime.net/img/peanut-butter-jelly-time.gif);*/
 }
 
 .clueSelect {
@@ -7,6 +7,6 @@ body {
 }
 
 .formsDiv {
-	margin: 100px 0 0 0;
+	margin: 100px 0;
 	text-align: center;
 }

@@ -1,151 +1,232 @@
 let multiButtonID = 0;
 let columnID = 0;
+let clueNum = 0;
+let multiNum = 0;
 
-function stringForms(){
-	$(".formEntry").remove();
-	$(".formsDiv").append("<div class='formEntry'></div>");
+//Question Answer string clue type
+function stringForms(clueID){
+	$("."+clueID+" .formEntry").remove();
+	$("."+clueID+" .formsDiv").append("<div class='formEntry'></div>");
 
 	let clueForm = `
 		<form>
-		Question Text: <input type="text" name="QuestionText"><br>
-		Answer Text: <input type="text" name="AnswerText"><br>
-		<input type="submit" value="update">
+		Question Text: <input type="text" class="QuestionText"><br>
+		Answer Text: <input type="text" class="AnswerText"><br>
+		<input type="button" value="submit" onclick="formSubmit('`+clueID+`')">
 		</form>
 	`;
-	$(".formEntry").append(clueForm);
+	$("."+clueID+" .formEntry").append(clueForm);
 };
 
-function pickerForms(){
-	$(".formEntry").remove();
-	$(".formsDiv").append("<div class='formEntry'></div>");
+//Picker Wheel clue type
+function pickerForms(clueID){
+	$("."+clueID+" .formEntry").remove();
+	$("."+clueID+" .formsDiv").append("<div class='formEntry'></div>");
 
 	let clueForm = `
 		<form>
-		Question Text: <input type="text" name="QuestionText"><br>
+		Question Text: <input type="text" class="QuestionText"><br>
 		<div class="pickerColumns">
-		Picker Column: <input type="text" name="AnswerText"><br>
+		Picker Column: <input type="text" class="AnswerText"><br>
 		</div>
-		<input type="button" value="Add Column" onclick="addColumn()"><br>
-		<input type="submit" value="update">
+		<input type="button" value="Add Column" onclick="addColumn('`+clueID+`')"><br>
+		<input type="button" value="submit" onclick="formSubmit('`+clueID+`')">
 		</form>
 	`;
-	$(".formEntry").append(clueForm);
+	$("."+clueID+" .formEntry").append(clueForm);
 };
 
-function jigsawForms(){
-	$(".formEntry").remove();
-	$(".formsDiv").append("<div class='formEntry'></div>");
+function addColumn(clueID){
+	columnID++;
+	$("."+clueID+" .pickerColumns").append(`<div class="column`+columnID+`">
+		Picker Column: <input type="text" class="pickerColumn">
+		<input type="button" value="Remove" onclick="removeColumn(`+columnID+`, '`+clueID+`')"><br>
+		</div>`);
+}
+
+function removeColumn(ID, clueID){
+	$("."+clueID+" .column" +ID).remove();
+}
+
+//Jigsaw clue type
+function jigsawForms(clueID){
+	$("."+clueID+" .formEntry").remove();
+	$("."+clueID+" .formsDiv").append("<div class='formEntry'></div>");
 
 	let clueForm = `
 		<form>
 		Upload Picture: <form action="/action_page.php">
-  		<input type="file" name="pic" accept="image/*">
+  		<input type="file" name="pic" accept="image/*" class="jigImage">
 		</form>
-		Pieces Across: <input type="number" min="1" max="6" name="piecesAcross"><br>
-		Pieces Down: <input type="number" min="1" max="6" name="piecesDown"><br>
-		<input type="submit" value="update">
+		Pieces Across: <input type="number" min="1" max="6" class="piecesAcross"><br>
+		Pieces Down: <input type="number" min="1" max="6" class="piecesDown"><br>
+		<input type="button" value="submit" onclick="formSubmit('`+clueID+`')">
 		</form>
 	`;
-	$(".formEntry").append(clueForm);
+	$("."+clueID+" .formEntry").append(clueForm);
 };
 
-function multiForms(){
-	$(".formEntry").remove();
-	$(".formsDiv").append("<div class='formEntry'></div>");
+//Multichoice and Combination clue type
+function multiForms(clueID){
+	$("."+clueID+" .formEntry").remove();
+	$("."+clueID+" .formsDiv").append("<div class='formEntry'></div>");
 
-	let clueForm = `
-		<form>
-		Question Type: <select id="multiType"><br>
-			<option value="multi">Multiple Choice</option><br>
-			<option value="combi">Combinatorial</option><br>
-		</select><br>
-		Question Text: <input type="text" name="QuestionText"><br>
+	let clueForm = `<form>
 
-		<div class="answerInputs"><br>		
-		Correct Answer: <input type="text" name="AnswerText"><br>
-		</div><br>
+		<input class="multiAdd" type="button" value="Add multiple choice part" onclick="addMultiClue('`+clueID+`')">
 
-		<div class="choiceInputs"><br>		
-			Possible Choice: <input type="text" name="ChoiceText"><br>
-		<div class="extraChoices"></div>
-		<input type="button" value="Add Choice" onclick="addMultiButton('Choices')">
-		</div><br>
-
-		<input type="submit" value="update">
+		<input type="button" value="submit" onclick="formSubmit('`+clueID+`')">
 		</form>
 	`;
-	$(".formEntry").append(clueForm);
+	$("."+clueID+" .formEntry").append(clueForm);
 
-	let multiType = document.getElementById("multiType");
-	multiType.onchange = function(){
-		let selType = multiType.value;
-		switch(selType){
-			case "multi":
-				$(".extraAnswers").remove()
-				$(".answerAdd").remove();
-				break;
-			case "combi":
-				$(".answerInputs").append('<div class="extraAnswers"></div>');
-				$(".answerInputs").append(`<input class="answerAdd" type="button" value="Add Answer" onclick="addMultiButton('Answers')">`);
-				break;
-			default:
-				return;
-		}
+};
+
+function multiTypeSwitch(){
+	switch(this.value){
+		case "multi":
+			$("."+clueID+" .extraAnswers").remove()
+			$("."+clueID+" .answerAdd").remove();
+			break;
+		case "combi":
+			$("."+clueID+" .answerInputs").append('<div class="extraAnswers"></div>');
+			$("."+clueID+" .answerInputs").append(`<input class="answerAdd" type="button" value="Add Answer" onclick="addMultiButton('Answers', '`+clueID+`')">`);
+			break;
+		default:
+			return;
 	}
-};
+}
 
-function addMultiButton(add){
+function addMultiButton(add, clueID){
 	multiButtonID++;
 
 	let inputTitle
 	add==="Answers" ? inputTitle="Correct Answer: " : inputTitle="Possible Choice: ";
 
-	$(".extra" + add).append(`<div class='multibutton`+multiButtonID+`'>
+	$("."+clueID+" .extra" + add).append(`<div class='multibutton`+multiButtonID+`'>
 		`+inputTitle+`<input type="text" name="AnswerText">
-		<input type='button' value='Remove' onclick='removeMultiButton(`+multiButtonID+`)'><br>
+		<input type='button' value='Remove' onclick='removeMultiButton(`+multiButtonID+`, "`+clueID+`")'><br>
 		</div>`);
 };
 
-function removeMultiButton(ID){
-	$(".multibutton"+ID).remove();
+function removeMultiButton(ID, clueID){
+	$("."+clueID+" .multibutton"+ID).remove();
 }
 
-function addColumn(){
-	columnID++;
-	$(".pickerColumns").append(`<div class="column`+columnID+`">
-		Picker Column: <input type="text" name="pickerColumn">
-		<input type="button" value="Remove" onclick="removeColumn(`+columnID+`)"><br>
-		</div>`);
+function addMultiClue(clueID){
+	multiNum++;
+	let clueForm = `<div id="multi`+multiNum+`">
+		Question Type: <select class="multiType"><br>
+			<option value="multi">Multiple Choice</option><br>
+			<option value="combi">Combinatorial</option><br>
+		</select><br>
+		Question Text: <input type="text" class="QuestionText"><br>
+
+		<div class="answerInputs"><br>		
+		Correct Answer: <input type="text" class="AnswerText"><br>
+		</div><br>
+
+		<div class="choiceInputs"><br>		
+			Possible Choice: <input type="text" class="ChoiceText"><br>
+		<div class="extraChoices"></div>
+		<input type="button" value="Add Choice" onclick="addMultiButton('Choices', '`+clueID+`')">
+		</div><br>
+
+		</div>`;
+
+	$("."+clueID+" .multiAdd").before(clueForm);
+	$("#"+multiNum+" .multiType").change(multiTypeSwitch);
 }
 
-function removeColumn(ID){
-	$(".column" +ID).remove();
-}
-
-$(document).ready(function(){
-
-let clueType = document.getElementById("clueType");
-stringForms();
-
-clueType.onchange = function(){
-	let selValue = clueType.value;
-
-	switch(selValue){
+//Submit clue type forms
+function formSubmit(clueID){
+	let submitType = $("#"+clueID+".clueType").val();
+	let sendReq
+	switch(submitType){
 		case "clueString":
-			stringForms();
+			sendReq = {
+				type: "clueString", 
+				qText: $("."+clueID+" .QuestionText").val(), 
+				aText: $("."+clueID+" .AnswerText").val()};
 			break;
 		case "cluePicker":
-			pickerForms();
+			sendReq = {
+				type: "cluePicker", 
+				qText: $("."+clueID+" .QuestionText").val()};
 			break;
 		case "clueJigsaw":
-			jigsawForms();
+			sendReq = {
+				type: "clueJigsaw", 
+				jigsawImage: $("."+clueID+" .jigImage").val(),
+				pAcross: $("."+clueID+" .piecesAcross").val(), 
+				pDown: $("."+clueID+" .piecesDown").val()};
 			break;
 		case "clueMulti":
-			multiForms();
+			sendReq = {
+				type: "clueMulti",
+				qType: $("."+clueID+" .multiType").val(),
+				qText: $("."+clueID+" .QuestionText").val()
+			};
+			break;
+		default:
+			break;
+	}
+	
+	$.ajax({
+		url: "http://localhost:3000/api/ajax",
+		type: "POST",
+		data: sendReq,
+		success: function(result){
+			
+		},
+		error: function(error){
+			console.log(error);
+		}
+	})
+}
+
+function addClue(){
+	clueNum++;
+	$("#clueButton").before(`
+<div class="clue`+clueNum+`">
+	<div class="clueSelect">
+		<select class="clueType" id="clue`+clueNum+`">
+			<option value="clueString">String</option>
+			<option value="cluePicker">Picker</option>
+			<option value="clueJigsaw">Jigsaw</option>
+			<option value="clueMulti">Multichoice</option>
+		</select>
+	</div>
+	<div class="formsDiv">
+
+	</div>
+</div>`);
+	$(".clue"+clueNum+" .clueType").change(clueHandler);
+	stringForms("clue"+clueNum)
+}
+
+function clueHandler(){
+	switch(this.value){
+		case "clueString":
+			stringForms(this.id);
+			break;
+		case "cluePicker":
+			pickerForms(this.id);
+			break;
+		case "clueJigsaw":
+			jigsawForms(this.id);
+			break;
+		case "clueMulti":
+			multiForms(this.id);
 			break;	
-		deafult:
+		default:
 			return;
 	};
-};
+}
+
+//Document load, show string clue type, set up cluetype change listener
+$(document).ready(function(){
+
+	addClue();
 
 });
