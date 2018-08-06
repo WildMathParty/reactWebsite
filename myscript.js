@@ -89,7 +89,6 @@ function multiTypeSwitch(){
 			$("#"+this.id+" .answerAdd").remove();
 			break;
 		case "combi":
-			$(".tester").remove()
 			$("#"+this.id+" .answerInputs").append('<div class="extraAnswers"></div>');
 			$("#"+this.id+" .answerInputs").append(`<input class="answerAdd" type="button" value="Add Answer" onclick="addMultiButton('Answers', '`+this.id+`')">`);
 			break;
@@ -102,10 +101,17 @@ function addMultiButton(add, multiID){
 	multiBtnNum++;
 
 	let inputTitle
-	add==="Answers" ? inputTitle="Correct Answer: " : inputTitle="Possible Choice: ";
+	let classTitle
+	if(add === "Answers"){
+		inputTitle = "Correct Answer: ";
+		classTitle = "AnswerText";
+	} else {
+		inputTitle = "Possible Choice: ";
+		classTitle = "ChoiceText";
+	}
 
 	$("#"+multiID+" .extra" + add).append(`<div class='multibutton`+multiBtnNum+`'>
-		`+inputTitle+`<input type="text">
+		`+inputTitle+`<input type="text" class="`+classTitle+`">
 		<input type='button' value='Remove' onclick='removeMultiButton(`+multiBtnNum+`)'><br>
 		</div>`);
 };
@@ -116,7 +122,7 @@ function removeMultiButton(multiBtnID){
 
 function addMultiClue(clueID){
 	multiNum++;
-	let clueForm = `<div id="multi`+multiNum+`">
+	let clueForm = `<div id="multi`+multiNum+`" class="multiCluePart">
 		Question Type: <select class="multiType" id="multi`+multiNum+`"><br>
 			<option value="multi">Multiple Choice</option><br>
 			<option value="combi">Combinatorial</option><br>
@@ -142,7 +148,7 @@ function addMultiClue(clueID){
 //Submit clue type forms
 function formSubmit(clueID){
 	let submitType = $("#"+clueID+".clueType").val();
-	let sendReq
+	let sendReq;
 	switch(submitType){
 		case "clueString":
 			sendReq = {
@@ -163,10 +169,26 @@ function formSubmit(clueID){
 				pDown: $("."+clueID+" .piecesDown").val()};
 			break;
 		case "clueMulti":
+			let clueList = [];
+			let clueI = 0;
+			$("."+clueID+" .multiCluePart").each(function(){
+				let curID = this.id;
+				clueList.push([
+					$("#"+curID+" .multiType").val(),
+					$("#"+curID+" .QuestionText").val(),
+				]);
+				$("#"+curID+" .AnswerText").each(function(){
+					clueList[clueI].push([this.value, true]);
+				});
+				$("#"+curID+" .ChoiceText").each(function(){
+					clueList[clueI].push([this.value, false])
+				});
+				$(".tester").before("<p>"+clueList+"</p>");
+				clueI++;
+			});
 			sendReq = {
 				type: "clueMulti",
-				qType: $("."+clueID+" .multiType").val(),
-				qText: $("."+clueID+" .QuestionText").val()
+				clues: JSON.stringify(clueList)
 			};
 			break;
 		default:
