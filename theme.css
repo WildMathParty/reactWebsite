@@ -1,5 +1,24 @@
 body {
-	//background-image: url(https://i.kym-cdn.com/photos/images/original/001/395/335/8fd.gif);
+	background-color: #5b4166;
+	font-family: Courier New, monospace;
+	color: white;
+}
+
+input, select {
+	font-family: Courier New, monospace;	
+	margin: 2px 2px 2px 2px;
+}
+
+input[type=text] {
+	border: 2px solid #69B291;
+	border-radius: 4px;
+}
+
+input[type=button], select{
+	background-color: white;
+	border: none;
+	border-radius: 4px;
+	padding: 5px 10px;
 }
 
 .clueSelect {

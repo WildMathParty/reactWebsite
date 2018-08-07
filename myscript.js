@@ -13,9 +13,11 @@ function stringForms(clueID){
 		Question Text: <input type="text" class="QuestionText"><br>
 		Answer Text: <input type="text" class="AnswerText"><br>
 		<input type="button" value="submit" onclick="formSubmit('`+clueID+`')">
-		</form>
 	`;
-	$("."+clueID+" .formEntry").append(clueForm);
+	if(clueID !== "clue1"){
+		clueForm += `<input type="button" value="remove" onclick="formRemove('`+clueID+`')">`;
+	}
+	$("."+clueID+" .formEntry").append(clueForm+`<br></form>`);
 };
 
 //Picker Wheel clue type
@@ -31,9 +33,11 @@ function pickerForms(clueID){
 		</div>
 		<input type="button" value="Add Column" onclick="addColumn('`+clueID+`')"><br>
 		<input type="button" value="submit" onclick="formSubmit('`+clueID+`')">
-		</form>
 	`;
-	$("."+clueID+" .formEntry").append(clueForm);
+	if(clueID !== "clue1"){
+		clueForm += `<input type="button" value="remove" onclick="formRemove('`+clueID+`')">`;
+	}
+	$("."+clueID+" .formEntry").append(clueForm+`<br></form>`);
 };
 
 function addColumn(clueID){
@@ -61,9 +65,11 @@ function jigsawForms(clueID){
 		Pieces Across: <input type="number" min="1" max="6" class="piecesAcross"><br>
 		Pieces Down: <input type="number" min="1" max="6" class="piecesDown"><br>
 		<input type="button" value="submit" onclick="formSubmit('`+clueID+`')">
-		</form>
 	`;
-	$("."+clueID+" .formEntry").append(clueForm);
+	if(clueID !== "clue1"){
+		clueForm += `<input type="button" value="remove" onclick="formRemove('`+clueID+`')">`;
+	}
+	$("."+clueID+" .formEntry").append(clueForm+`<br></form>`);
 };
 
 //Multichoice and Combination clue type
@@ -76,9 +82,11 @@ function multiForms(clueID){
 		<input class="multiAdd" type="button" value="Add multiple choice part" onclick="addMultiClue('`+clueID+`')">
 
 		<input type="button" value="submit" onclick="formSubmit('`+clueID+`')">
-		</form>
 	`;
-	$("."+clueID+" .formEntry").append(clueForm);
+	if(clueID !== "clue1"){
+		clueForm += `<input type="button" value="remove" onclick="formRemove('`+clueID+`')">`;
+	}
+	$("."+clueID+" .formEntry").append(clueForm+`<br></form>`);
 
 };
 
@@ -226,6 +234,10 @@ function addClue(){
 </div>`);
 	$(".clue"+clueNum+" .clueType").change(clueHandler);
 	stringForms("clue"+clueNum)
+}
+
+function formRemove(clueID){
+	$("."+clueID).remove();
 }
 
 function clueHandler(){
